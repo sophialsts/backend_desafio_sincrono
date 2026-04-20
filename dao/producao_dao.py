@@ -39,16 +39,15 @@ class ProducaoDAO:
                 return {"success": False, "error": "duplicate", "message": error_msg}
             return {"success": False, "error": "Erro", "message": error_msg}
 
-    def listar_todos(self) -> List[Dict[str, Any]]:
-        sql = """
-            SELECT producoes_id, pesquisadores_id, issn, nomeartigo, anoartigo 
-            FROM producoes 
-            ORDER BY anoartigo DESC, nomeartigo
-        """
-        with self._get_cursor() as cursor:
-            cursor.execute(sql)
-            colunas = [desc[0] for desc in cursor.description]
-            return [dict(zip(colunas, linha)) for linha in cursor.fetchall()]
+    ''' 
+    
+    ESCREVA AQUI A FUNÇÃO DAO PARA LISTAR AS PRODUÇÕES VINDAS DO BANCO
+    
+    Dicas:
+    * Não esqueça de trazer todas as colunas da tabela de producoes
+    * Fique atento ao tipo de retorno da função, são várias linhas, com colunas que possuem valores/registros.
+     
+    '''
 
     def buscar_por_id(self, producoes_id: str | UUID) -> Optional[Dict[str, Any]]:
         sql = """

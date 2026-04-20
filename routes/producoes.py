@@ -25,9 +25,10 @@ def criar_producao(producao: Producao_create_DTO):
     )
 
 
-@router.get("", response_model=List[Producao])
-def listar_producoes():
-    return dao.listar_todos()
+''' ESCREVA AQUI A FUNÇÃO DA ROTA DE LISTAR PRODUÇÕES
+Dica:
+* Se atente ao método router.(método) que a rota vai realizar, o tipo de resposta, e chamar a função do DAO corretamente.
+'''
 
 
 @router.get("/{producoes_id}", response_model=Producao)

@@ -68,7 +68,6 @@ async def index():
                 <li><code>DELETE /pesquisadores/{lattes_id}</code> - Deletar pesquisador</li>
             </ul>
             <ul>
-                <li><code>GET /producoes</code> - Listar todas as produções</li>
                 <li><code>POST /producoes</code> - Criar nova produção</li>
                 <li><code>GET /producoes/{producoes_id}</code> - Buscar produção</li>
                 <li><code>PUT /producoes/{producoes_id}</code> - Atualizar produção</li>
