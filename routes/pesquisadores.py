@@ -7,19 +7,25 @@ from dao import PesquisadorDAO
 router = APIRouter(prefix="/pesquisadores", tags=["Pesquisadores"])
 dao = PesquisadorDAO()
 
-@router.post("", response_model=Pesquisador, status_code=status.HTTP_201_CREATED)
-def criar_pesquisador(pesquisador: Pesquisador_create_DTO):
-    resultado = dao.salvar(nome=pesquisador.nome, lattes_id=pesquisador.lattes_id)
-    if resultado.get("error") == "duplicate":
-        raise HTTPException(status_code=409, detail=resultado["message"])
-    if not resultado.get("success"):
-        raise HTTPException(status_code=400, detail=resultado["message"])
-    return Pesquisador(
-        lattes_id=pesquisador.lattes_id,
-        nome=pesquisador.nome,
-        pesquisadores_id=resultado.get("pesquisadores_id"),
-        articles=0
-    )
+'''
+ESCREVA AQUI A ROTA DE ADIÇÃO DE PESQUISADOR
+
+Onde fica:
+* Neste arquivo, logo abaixo da criação do `router` e do `dao`.
+
+O que essa rota precisa fazer:
+* Usar `@router.post("")` para responder no endpoint `POST /pesquisadores`.
+* Receber no corpo da requisição um `Pesquisador_create_DTO`.
+* Chamar o método `dao.salvar(...)` passando os campos necessários do DTO.
+* Tratar erro de duplicidade retornando HTTP 409.
+* Tratar outros erros de criação retornando HTTP 400.
+* Em caso de sucesso, devolver um `Pesquisador` com os dados recebidos e o `pesquisadores_id`
+  retornado pelo banco.
+
+Importante:
+* Esta rota depende do `Pesquisador_create_DTO` estar implementado e funcionando corretamente,
+  porque é ele quem valida a entrada recebida no POST.
+'''
 
 
 @router.get("", response_model=List[Pesquisador])

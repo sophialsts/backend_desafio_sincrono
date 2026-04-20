@@ -62,7 +62,6 @@ async def index():
             <h2>Endpoints disponíveis:</h2>
             <ul>
                 <li><code>GET /pesquisadores</code> - Listar todos os pesquisadores</li>
-                <li><code>POST /pesquisadores</code> - Criar novo pesquisador</li>
                 <li><code>GET /pesquisadores/{lattes_id}</code> - Buscar pesquisador</li>
                 <li><code>PUT /pesquisadores/{lattes_id}</code> - Atualizar pesquisador</li>
                 <li><code>DELETE /pesquisadores/{lattes_id}</code> - Deletar pesquisador</li>

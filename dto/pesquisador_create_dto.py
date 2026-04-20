@@ -1,5 +1,19 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 
 class Pesquisador_create_DTO(BaseModel):
-    lattes_id: str = Field(..., min_length=16, max_length=16)
-    nome: str = Field(..., min_length=2, max_length=200)
+    '''
+    IMPLEMENTE AQUI O DTO DE CRIAÇÃO DE PESQUISADOR
+
+    Onde este DTO é usado:
+    * Na rota de `POST /pesquisadores`.
+    * Atualmente ele também é reutilizado na rota de atualização de pesquisador.
+
+    O que precisa existir aqui:
+    * Os campos necessários para receber os dados de criação do pesquisador.
+    * As validações desses campos com Pydantic.
+
+    Importante:
+    * Este DTO precisa estar funcionando corretamente para que a rota de adição de pesquisador
+      consiga validar o corpo da requisição antes de chamar o DAO.
+    '''
+    pass
