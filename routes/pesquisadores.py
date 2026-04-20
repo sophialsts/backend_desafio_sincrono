@@ -41,24 +41,27 @@ def buscar_pesquisador(lattes_id: str):
     return resultado
 
 
-@router.put("/{lattes_id}", response_model=Pesquisador)
-def atualizar_pesquisador(lattes_id: str, pesquisador: Pesquisador_create_DTO):
-    resultado = dao.atualizar(
-        nome=pesquisador.nome,
-        pesquisadores_id=pesquisador.lattes_id,
-        lattes_id=lattes_id
-    )
-    if resultado.get("error"):
-        raise HTTPException(status_code=400, detail=resultado["message"])
-    pesquisador_atualizado = dao.buscar_por_lattes_id(lattes_id)
-    if pesquisador_atualizado:
-        return Pesquisador(**pesquisador_atualizado)
-    return Pesquisador(
-        lattes_id=lattes_id,
-        nome=pesquisador.nome,
-        pesquisadores_id=pesquisador.lattes_id,
-        articles=0
-    )
+'''
+ESCREVA AQUI A ROTA DE ATUALIZAÇÃO DE PESQUISADOR
+
+Onde fica:
+* Neste arquivo, logo abaixo da rota de busca por `lattes_id`.
+
+O que essa rota precisa fazer:
+* Usar `@router.put("/{lattes_id}")` para responder no endpoint
+  `PUT /pesquisadores/{lattes_id}`.
+* Receber o `lattes_id` pela URL.
+* Receber no corpo da requisição um `Pesquisador_create_DTO` com os dados atualizados.
+* Chamar o método `dao.atualizar(...)` passando os dados necessários.
+* Se o DAO retornar erro, responder com HTTP 400.
+* Depois da atualização, buscar novamente o pesquisador para devolver os dados atualizados.
+* Em caso de sucesso, retornar um `Pesquisador`.
+
+Importante:
+* Esta rota depende do `Pesquisador_create_DTO` estar implementado e funcionando corretamente,
+  pois ele valida os dados recebidos no corpo da requisição.
+* Esta rota também depende do método `dao.atualizar(...)` estar implementado e funcionando.
+'''
 
 
 @router.delete("/{lattes_id}")

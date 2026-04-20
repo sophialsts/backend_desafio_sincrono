@@ -63,7 +63,6 @@ async def index():
             <ul>
                 <li><code>GET /pesquisadores</code> - Listar todos os pesquisadores</li>
                 <li><code>GET /pesquisadores/{lattes_id}</code> - Buscar pesquisador</li>
-                <li><code>PUT /pesquisadores/{lattes_id}</code> - Atualizar pesquisador</li>
                 <li><code>DELETE /pesquisadores/{lattes_id}</code> - Deletar pesquisador</li>
             </ul>
             <ul>

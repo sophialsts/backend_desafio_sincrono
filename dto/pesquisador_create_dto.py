@@ -15,5 +15,7 @@ class Pesquisador_create_DTO(BaseModel):
     Importante:
     * Este DTO precisa estar funcionando corretamente para que a rota de adição de pesquisador
       consiga validar o corpo da requisição antes de chamar o DAO.
+    * Este DTO também é dependência da rota de atualização de pesquisador caso ele seja
+      reutilizado no `PUT /pesquisadores/{lattes_id}`.
     '''
     pass
