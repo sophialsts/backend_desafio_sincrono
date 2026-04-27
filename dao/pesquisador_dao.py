@@ -60,27 +60,6 @@ class PesquisadorDAO:
                 return dict(zip(colunas, resultado))
             return None
 
-    '''
-    ESCREVA AQUI A FUNÇÃO DAO PARA ATUALIZAR UM PESQUISADOR
-
-    Onde fica:
-    * Neste arquivo, logo abaixo de `buscar_por_lattes_id`.
-
-    O que essa função precisa fazer:
-    * Receber os dados necessários para atualizar o pesquisador.
-    * Executar um `UPDATE pesquisadores SET ... WHERE lattes_id = %s`.
-    * Usar `RETURNING pesquisadores_id` para confirmar que o registro foi atualizado.
-    * Fazer `commit()` em caso de sucesso.
-    * Fazer `rollback()` em caso de erro.
-    * Retornar um dicionário com `success` e uma `message`.
-    * Se nenhum registro for encontrado, retornar erro informando que o pesquisador não existe.
-
-    Importante:
-    * Essa função será chamada pela rota de `PUT /pesquisadores/{lattes_id}`.
-    * A rota de atualização também depende do DTO de criação/edição do pesquisador estar
-      funcionando para validar os dados antes de chamar este DAO.
-    '''
-
     def atualizar(self, lattes_id: str, pesquisador: Pesquisador_create_DTO) -> Dict[str, Any]:
         sql = """
             UPDATE pesquisadores
@@ -95,13 +74,12 @@ class PesquisadorDAO:
                     pesquisador.nome,
                     lattes_id
                 ))
-                resultado = cursor.fetchone()
-                if resultado:
+                if cursor.fetchone():
                     self._conexao.get_conexao().commit()
                     return {"success": True, "message": "Pesquisador atualizado com sucesso!"}
 
                 self._conexao.get_conexao().rollback()
-                return {"success": False, "error": "Erro", "message": "Pesquisador não encontrado"}
+                return {"success": False, "error": "Erro", "message": "Pesquisador não existe"}
         except Exception as e:
             self._conexao.get_conexao().rollback()
             error_msg = str(e)
