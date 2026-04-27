@@ -67,7 +67,7 @@ async def index():
             </ul>
             <ul>
                 <li><code>POST /producoes</code> - Criar nova produção</li>
-                <li><code>GET /producoes/{producoes_id}</code> - Buscar produção</li>
+                <li><code>GET /producoes/{producoes_id}</code> - Buscar produção específica</li>
                 <li><code>PUT /producoes/{producoes_id}</code> - Atualizar produção</li>
                 <li><code>DELETE /producoes/{producoes_id}</code> - Deletar produção</li>
             </ul>

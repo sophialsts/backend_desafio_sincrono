@@ -25,10 +25,9 @@ def criar_producao(producao: Producao_create_DTO):
     )
 
 
-''' ESCREVA AQUI A FUNÇÃO DA ROTA DE LISTAR PRODUÇÕES
-Dica:
-* Se atente ao método router.(método) que a rota vai realizar, o tipo de resposta, e chamar a função do DAO corretamente.
-'''
+@router.get("", response_model=List[Producao])
+def listar_producoes():
+    return dao.listar_todas()
 
 
 @router.get("/{producoes_id}", response_model=Producao)
@@ -39,18 +38,27 @@ def buscar_producao(producoes_id: UUID):
     return resultado
 
 
-@router.put("/{producoes_id}", response_model=Producao)
-def atualizar_producao(producoes_id: UUID, producao: Producao_create_DTO):
-    resultado = dao.atualizar(producao, producoes_id)
-    if resultado.get("error"):
-        raise HTTPException(status_code=400, detail=resultado["message"])
-    return Producao(
-        issn=producao.issn,
-        nomeartigo=producao.nomeartigo,
-        anoartigo=producao.anoartigo,
-        pesquisadores_id=producao.pesquisadores_id,
-        producoes_id=producoes_id
-    )
+'''
+ESCREVA AQUI A ROTA DE ATUALIZAÇÃO DE PRODUÇÃO
+
+Onde fica:
+* Neste arquivo, logo abaixo da rota de busca por `producoes_id`.
+
+O que essa rota precisa fazer:
+* Usar `@router.put("/{producoes_id}")` para responder no endpoint
+  `PUT /producoes/{producoes_id}`.
+* Receber o `producoes_id` pela URL.
+* Receber no corpo da requisição um `Producao_create_DTO` com os dados atualizados.
+* Chamar o método `dao.atualizar(...)` passando os dados necessários.
+* Se o DAO retornar erro, responder com HTTP 400.
+* Depois da atualização, buscar novamente a produção para devolver os dados atualizados.
+* Em caso de sucesso, retornar uma `Producao`.
+
+Importante:
+* Esta rota depende do `Producao_create_DTO` estar implementado e funcionando corretamente,
+  pois ele valida os dados recebidos no corpo da requisição.
+* Esta rota também depende do método `dao.atualizar(...)` estar implementado e funcionando.
+'''
 
 
 @router.delete("/{producoes_id}")

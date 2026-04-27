@@ -1,5 +1,6 @@
 from database import Conexao
 from typing import List, Optional, Dict, Any
+from dto.pesquisador_create_dto import Pesquisador_create_DTO
 
 
 class PesquisadorDAO:
@@ -80,15 +81,50 @@ class PesquisadorDAO:
       funcionando para validar os dados antes de chamar este DAO.
     '''
 
-    def apagar(self, lattes_id: str) -> Dict[str, Any]:
-        sql = "DELETE FROM pesquisadores WHERE lattes_id = %s"
+    def atualizar(self, lattes_id: str, pesquisador: Pesquisador_create_DTO) -> Dict[str, Any]:
+        sql = """
+            UPDATE pesquisadores
+            SET lattes_id = %s, nome = %s
+            WHERE lattes_id = %s
+            RETURNING pesquisadores_id
+        """
         try:
             with self._get_cursor() as cursor:
-                cursor.execute(sql, (lattes_id,))
-                if cursor.rowcount > 0:
+                cursor.execute(sql, (
+                    pesquisador.lattes_id,
+                    pesquisador.nome,
+                    lattes_id
+                ))
+                resultado = cursor.fetchone()
+                if resultado:
                     self._conexao.get_conexao().commit()
-                    return {"success": True, "message": "Pesquisador apagado com sucesso!"}
-                return {"success": False, "error": "inválido", "message": "Pesquisador não encontrado ou ID inválido"}
+                    return {"success": True, "message": "Pesquisador atualizado com sucesso!"}
+
+                self._conexao.get_conexao().rollback()
+                return {"success": False, "error": "Erro", "message": "Pesquisador não encontrado"}
         except Exception as e:
             self._conexao.get_conexao().rollback()
-            return {"success": False, "error": "inválido", "message": str(e)}
+            error_msg = str(e)
+            if "duplicate key" in error_msg.lower() or "unique constraint" in error_msg.lower():
+                return {"success": False, "error": "duplicate", "message": error_msg}
+            return {"success": False, "error": "Erro", "message": error_msg}
+
+    '''
+    ESCREVA AQUI A FUNÇÃO DAO PARA APAGAR UM PESQUISADOR
+
+    Onde fica:
+    * Neste arquivo, logo abaixo da função de atualização do pesquisador.
+
+    O que essa função precisa fazer:
+    * Receber o `lattes_id` do pesquisador que será apagado.
+    * Executar um `DELETE FROM pesquisadores WHERE lattes_id = %s`.
+    * Fazer `commit()` em caso de sucesso.
+    * Fazer `rollback()` em caso de erro.
+    * Retornar um dicionário com `success` e uma `message`.
+    * Se nenhum registro for apagado, retornar erro informando que o pesquisador não existe
+      ou que o identificador é inválido.
+
+    Importante:
+    * Essa função será chamada pela rota de `DELETE /pesquisadores/{lattes_id}`.
+    * A rota depende desse retorno para decidir se responde sucesso ou HTTP 400.
+    '''

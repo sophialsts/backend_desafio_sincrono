@@ -39,15 +39,16 @@ class ProducaoDAO:
                 return {"success": False, "error": "duplicate", "message": error_msg}
             return {"success": False, "error": "Erro", "message": error_msg}
 
-    ''' 
-    
-    ESCREVA AQUI A FUNÇÃO DAO PARA LISTAR AS PRODUÇÕES VINDAS DO BANCO
-    
-    Dicas:
-    * Não esqueça de trazer todas as colunas da tabela de producoes
-    * Fique atento ao tipo de retorno da função, são várias linhas, com colunas que possuem valores/registros.
-     
-    '''
+    def listar_todas(self) -> List[Dict[str, Any]]:
+        sql = """
+            SELECT producoes_id, pesquisadores_id, issn, nomeartigo, anoartigo
+            FROM producoes
+            ORDER BY anoartigo DESC, nomeartigo
+        """
+        with self._get_cursor() as cursor:
+            cursor.execute(sql)
+            colunas = [desc[0] for desc in cursor.description]
+            return [dict(zip(colunas, linha)) for linha in cursor.fetchall()]
 
     def buscar_por_id(self, producoes_id: str | UUID) -> Optional[Dict[str, Any]]:
         sql = """
@@ -63,30 +64,26 @@ class ProducaoDAO:
                 return dict(zip(colunas, resultado))
             return None
 
-    def atualizar(self, producao: Producao_create_DTO, producoes_id: str | UUID) -> Dict[str, Any]:
-        sql = """
-            UPDATE producoes
-            SET nomeartigo = %s, issn = %s, anoartigo = %s, pesquisadores_id = %s
-            WHERE producoes_id = %s
-            RETURNING producoes_id
-        """
-        try:
-            with self._get_cursor() as cursor:
-                cursor.execute(sql, (
-                    producao.nomeartigo,
-                    producao.issn,
-                    producao.anoartigo,
-                    self._normalizar_uuid(producao.pesquisadores_id),
-                    self._normalizar_uuid(producoes_id)
-                ))
-                result = cursor.fetchone()
-                self._conexao.get_conexao().commit()
-                if result:
-                    return {"success": True, "message": "Produção atualizada com sucesso!"}
-                return {"success": False, "error": "Erro", "message": "Produção não encontrada"}
-        except Exception as e:
-            self._conexao.get_conexao().rollback()
-            return {"success": False, "error": "Erro", "message": str(e)}
+    '''
+    ESCREVA AQUI A FUNÇÃO DAO PARA ATUALIZAR UMA PRODUÇÃO
+
+    Onde fica:
+    * Neste arquivo, logo abaixo de `buscar_por_id`.
+
+    O que essa função precisa fazer:
+    * Receber os dados necessários para atualizar a produção.
+    * Executar um `UPDATE producoes SET ... WHERE producoes_id = %s`.
+    * Usar `RETURNING producoes_id` para confirmar que o registro foi atualizado.
+    * Fazer `commit()` em caso de sucesso.
+    * Fazer `rollback()` em caso de erro.
+    * Retornar um dicionário com `success` e uma `message`.
+    * Se nenhum registro for encontrado, retornar erro informando que a produção não existe.
+
+    Importante:
+    * Essa função será chamada pela rota de `PUT /producoes/{producoes_id}`.
+    * A rota de atualização também depende do DTO de criação/edição da produção estar
+      funcionando para validar os dados antes de chamar este DAO.
+    '''
 
     def apagar(self, producoes_id: str | UUID) -> Dict[str, Any]:
         sql = "DELETE FROM producoes WHERE producoes_id = %s"
